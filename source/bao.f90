@@ -27,12 +27,12 @@
     implicit none
     private
 
-    character(LEN=Ini_Enumeration_Len), parameter :: measurement_types(10) = &
+    character(LEN=Ini_Enumeration_Len), parameter :: measurement_types(11) = &
         [character(Ini_Enumeration_Len)::'Az','DV_over_rs','rs_over_DV','DA_over_rs', &
-        'F_AP', 'f_sigma8','bao_Hz_rs','bao_Hz_rs_103','dilation','DM_over_rs']
+        'F_AP', 'f_sigma8','bao_Hz_rs','bao_Hz_rs_103','dilation','DM_over_rs', 'DH_over_rs']
 
     integer, parameter :: bao_Az =1, bao_DV_over_rs = 2, bao_rs_over_DV = 3, bao_DA_over_rs = 4, &
-        F_AP= 5, f_sigma8=6, bao_Hz_rs = 7, bao_Hz_rs_103 = 8, dilation = 9, bao_DM_over_rs = 10
+        F_AP= 5, f_sigma8=6, bao_Hz_rs = 7, bao_Hz_rs_103 = 8, dilation = 9, bao_DM_over_rs = 10, bao_DH_over_rs = 11
 
     type, extends(TCosmoCalcLikelihood) :: TBAOLikelihood
         integer :: num_bao ! total number of points used
@@ -256,7 +256,14 @@
     real(mcp), intent(IN) :: z
     real(mcp) omh2,ckm,omegam,h
 
-    omegam = 1.d0 - CMB%omv - CMB%omk
+!---Mohsen Start
+	real(16) :: omegam_bao
+	common/omegam_bao/ omegam_bao
+
+    !omegam = 1.d0 - CMB%omv - CMB%omk
+    omegam = omegam_bao
+!---Mohsen End    
+    
     h = CMB%h0/100
     ckm = const_c/1e3_mcp !JD c in km/s
 
@@ -292,6 +299,8 @@
             BAO_theory(j) = this%Calculator%AngularDiameterDistance(z)/rs
         case (bao_DM_over_rs)
             BAO_theory(j) = (1+z)*this%Calculator%AngularDiameterDistance(z)/rs
+        case (bao_DH_over_rs)
+            BAO_theory(j) = 1/this%Calculator%Hofz(z)/rs            
         case (F_AP)
             BAO_theory(j) = (1+z)*this%Calculator%AngularDiameterDistance(z)* &
                 this%Calculator%Hofz(z)
