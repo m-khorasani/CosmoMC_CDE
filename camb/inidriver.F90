@@ -101,6 +101,15 @@
     !  Read initial parameters.
 
     call DarkEnergy_ReadParams(DefIni)
+!---CDE Start
+    call TwoField_ReadParams(DefIni)
+
+
+    log_phi_i = Ini_Read_Double('log_phi_i')
+    chi_i = Ini_Read_Double('chi_i')
+    log_lambda_chi = Ini_Read_Double('log_lambda_chi')
+
+
 
     P%h0     = Ini_Read_Double('hubble')
 
@@ -108,11 +117,15 @@
         P%omegab = Ini_Read_Double('ombh2')/(P%H0/100)**2
         P%omegac = Ini_Read_Double('omch2')/(P%H0/100)**2
         P%omegan = Ini_Read_Double('omnuh2')/(P%H0/100)**2
-        P%omegav = 1- Ini_Read_Double('omk') - P%omegab-P%omegac - P%omegan
+ 		!P%omegav = 1- Ini_Read_Double('omk') - P%omegab-P%omegac - P%omegan        
+		P%omegak = Ini_Read_Double('omk')
+
     else
         P%omegab = Ini_Read_Double('omega_baryon')
         P%omegac = Ini_Read_Double('omega_cdm')
-        P%omegav = Ini_Read_Double('omega_lambda')
+        !P%omegav = Ini_Read_Double('omega_lambda')
+		P%omegav = 1- Ini_Read_Double('omk') - P%omegab-P%omegac - P%omegan       
+!---CDE End
         P%omegan = Ini_Read_Double('omega_neutrino')
     end if
 
@@ -163,34 +176,34 @@
 
     if (P%NonLinear/=NonLinear_none) call NonLinear_ReadParams(DefIni)
 
-    if (P%PK_WantTransfer)  then
-        P%WantTransfer  = .true.
-        P%transfer%kmax          =  Ini_Read_Double('transfer_kmax')
-        P%transfer%k_per_logint  =  Ini_Read_Int('transfer_k_per_logint')
-        P%transfer%PK_num_redshifts =  Ini_Read_Int('transfer_num_redshifts')
-
-        transfer_interp_matterpower = Ini_Read_Logical('transfer_interp_matterpower', transfer_interp_matterpower)
-        transfer_power_var = Ini_read_int('transfer_power_var',transfer_power_var)
-        if (P%transfer%PK_num_redshifts > max_transfer_redshifts) error stop 'Too many redshifts'
-        do i=1, P%transfer%PK_num_redshifts
-            P%transfer%PK_redshifts(i)  = Ini_Read_Double_Array('transfer_redshift',i,0._dl)
-            transferFileNames(i)     = Ini_Read_String_Array('transfer_filename',i)
-            MatterPowerFilenames(i)  = Ini_Read_String_Array('transfer_matterpower',i)
-            if (TransferFileNames(i) == '') then
-                TransferFileNames(i) =  trim(numcat('transfer_',i))//'.dat'
-            end if
-            if (MatterPowerFilenames(i) == '') then
-                MatterPowerFilenames(i) =  trim(numcat('matterpower_',i))//'.dat'
-            end if
-            if (TransferFileNames(i)/= '') &
-                TransferFileNames(i) = trim(outroot)//TransferFileNames(i)
-            if (MatterPowerFilenames(i) /= '') &
-                MatterPowerFilenames(i)=trim(outroot)//MatterPowerFilenames(i)
-        end do
-    else
-        P%Transfer%PK_num_redshifts = 1
-        P%Transfer%PK_redshifts = 0
-    end if
+     if (P%PK_WantTransfer)  then
+         P%WantTransfer  = .true.
+         P%transfer%kmax          =  Ini_Read_Double('transfer_kmax')
+         P%transfer%k_per_logint  =  Ini_Read_Int('transfer_k_per_logint')
+         P%transfer%PK_num_redshifts =  Ini_Read_Int('transfer_num_redshifts')
+    
+         transfer_interp_matterpower = Ini_Read_Logical('transfer_interp_matterpower', transfer_interp_matterpower)
+         transfer_power_var = Ini_read_int('transfer_power_var',transfer_power_var)
+         if (P%transfer%PK_num_redshifts > max_transfer_redshifts) error stop 'Too many redshifts'
+         do i=1, P%transfer%PK_num_redshifts
+             P%transfer%PK_redshifts(i)  = Ini_Read_Double_Array('transfer_redshift',i,0._dl)
+             transferFileNames(i)     = Ini_Read_String_Array('transfer_filename',i)
+             MatterPowerFilenames(i)  = Ini_Read_String_Array('transfer_matterpower',i)
+             if (TransferFileNames(i) == '') then
+                 TransferFileNames(i) =  trim(numcat('transfer_',i))//'.dat'
+             end if
+             if (MatterPowerFilenames(i) == '') then
+                 MatterPowerFilenames(i) =  trim(numcat('matterpower_',i))//'.dat'
+             end if
+             if (TransferFileNames(i)/= '') &
+                 TransferFileNames(i) = trim(outroot)//TransferFileNames(i)
+             if (MatterPowerFilenames(i) /= '') &
+                 MatterPowerFilenames(i)=trim(outroot)//MatterPowerFilenames(i)
+         end do
+     else
+         P%Transfer%PK_num_redshifts = 1
+         P%Transfer%PK_redshifts = 0
+     end if
 
     if ((P%NonLinear==NonLinear_lens .or. P%NonLinear==NonLinear_both) .and. P%DoLensing) then
         P%WantTransfer  = .true.

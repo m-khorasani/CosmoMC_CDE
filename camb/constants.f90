@@ -24,7 +24,7 @@
     real(dl), parameter :: sigma_thomson = 6.6524616e-29_dl
     real(dl), parameter :: sigma_boltz = 5.6704e-8_dl
     real(dl), parameter :: k_B = 1.3806504e-23_dl
-    real(dl), parameter :: eV = 1.60217646e-19_dl
+    real(dl), parameter :: e_V = 1.60217646e-19_dl
 
 
     real(dl), parameter :: m_p = 1.672621637e-27_dl ! 1.672623e-27_dl
@@ -35,14 +35,17 @@
 
     real(dl), parameter :: Gyr=3.1556926e16_dl
     real(dl), parameter :: Mpc = 3.085678e22_dl !seem to be different definitions of this?
-    real(dl), parameter :: MPC_in_sec = Mpc/c ! Mpc/c = 1.029272d14 in SI units
+    real(dl), parameter :: MPC_in_sec = Mpc/c ! Mpc/c = 1.029272d14 in SI units  
 
     real(dl), parameter :: barssc0= k_B / m_p / c**2
     real(dl), parameter :: kappa=8._dl*const_pi*G
     real(dl), parameter :: a_rad = 8._dl*const_pi**5*k_B**4/15/c**3/h_p**3
     !7.565914e-16_dl !radiation constant for u=aT^4
-
-
+!---CDE Start
+    real(dl), parameter :: T_pl= sqrt(kappa*hbar/c**5)  			! sqrt(8 pi G hbar/c^5), reduced planck time
+    real(dl), parameter :: norm_V = (MPC_in_sec/T_pl)**2 			! Mpc/c = 1.029272d14 in SI units
+    real(dl), parameter :: H0_to_Mpl_in_GeV = 5.9268e-61_dl			! H0_M_pl in unit of GeV 
+!---CDE End
     real(dl), parameter :: Compton_CT = MPC_in_sec*(8.d0/3.d0)*(sigma_thomson/(m_e*c))*a_rad
     !Compton_CT is CT in Mpc units, (8./3.)*(sigma_T/(m_e*C))*a_R in Mpc
     !Used to get evolution of matter temperature

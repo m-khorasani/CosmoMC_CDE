@@ -225,8 +225,10 @@
     integer :: n_eq = 3
 
     !The following only used for approximations where small effect
-    real(dl) OmegaK, OmegaT, z_eq
-
+!---CDE Start    
+    !real(dl) OmegaK, OmegaT, z_eq
+    real(dl) Omega_K, OmegaT, z_eq    
+!---CDE End
 
     !Fundamental constants in SI units
     !      ("not4" pointed out by Gary Steigman)
@@ -456,8 +458,11 @@
     end function Recombination_xe
 
 
-
-    subroutine Recombination_init(Recomb, OmegaC, OmegaB, Omegan, Omegav, h0inp,tcmb,yp, nnu)
+!---CDE Start
+    !subroutine Recombination_init(Recomb, OmegaC, OmegaB, Omegan, Omegav, h0inp,tcmb,yp, nnu)
+    subroutine Recombination_init(Recomb, OmegaC, OmegaB, Omegan, Omegak, h0inp,tcmb,yp, nnu)
+!---CDE End    
+        
     !Would love to pass structure as arguments, but F90 would give circular reference...
     !hence mess passing parameters explcitly and non-generally
     !Note recfast only uses OmegaB, h0inp, tcmb and yp - others used only for Tmat approximation where effect small
@@ -472,7 +477,11 @@
     real(dl) Trad,Tmat,Tspin,d0hi,d0lo
     integer I
 
-    real(dl), intent(in) :: OmegaB,OmegaC, Omegan, Omegav, h0inp, yp
+!---CDE Start
+    !real(dl), intent(in) :: OmegaB,OmegaC, Omegan, Omegav, h0inp, yp
+    real(dl), intent(in) :: OmegaB, OmegaC, Omegan, Omegak, h0inp, yp    
+!---CDE End
+
     real(dl), intent(in), optional :: nnu
     real(dl) z,n,x,x0,rhs,x_H,x_He,x_H0,x_He0,H
     real(dl) zstart,zend,tcmb
@@ -526,7 +535,11 @@
 
     !Not general, but only for approx
     OmegaT=OmegaC+OmegaB            !total dark matter + baryons
-    OmegaK=1.d0-OmegaT-OmegaV       !curvature
+
+!---CDE Start
+    !OmegaK=1.d0-OmegaT-OmegaV       !curvature
+    Omega_K= Omegak       			 !curvature    
+!---CDE End
 
 
     !       convert the Hubble constant units
@@ -973,9 +986,16 @@
         !                f(3)=Tmat/(1._dl+z)      !Tmat follows Trad
         !	additional term to smooth transition to Tmat evolution,
         !	(suggested by Adam Moss)
-        dHdz = (HO**2/2.d0/Hz)*(4.d0*(1.d0+z)**3/(1.d0+z_eq)*OmegaT &
-            + 3.d0*OmegaT*(1.d0+z)**2 + 2.d0*OmegaK*(1.d0+z) )
 
+!---CDE Start
+        !dHdz = (HO**2/2.d0/Hz)*(4.d0*(1.d0+z)**3/(1.d0+z_eq)*OmegaT &
+        !    + 3.d0*OmegaT*(1.d0+z)**2 + 2.d0*OmegaK*(1.d0+z) )
+
+        dHdz = (HO**2/2.d0/Hz)*(4.d0*(1.d0+z)**3/(1.d0+z_eq)*OmegaT &
+            + 3.d0*OmegaT*(1.d0+z)**2 + 2.d0*Omega_K*(1.d0+z) )
+!---CDE End
+
+        ! dH/dz    
         epsilon = Hz*(1.d0+x+fHe)/(CT*Trad**3*x)
         f(3) = Tnow &
             + epsilon*((1.d0+fHe)/(1.d0+fHe+x))*((f(1)+fHe*f(2))/x) &
@@ -1299,4 +1319,3 @@
 
 
     end module Recombination
-

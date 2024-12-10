@@ -177,7 +177,9 @@
 
     real(dl) grhom,grhog,grhor,grhob,grhoc,grhov,grhornomass,grhok
     real(dl) taurst,dtaurec,taurend, tau_maxvis,adotrad
-
+!---CDE Start
+    real(dl) :: log_phi_i, chi_i, log_lambda_chi
+!---CDE End
     !Neutrinos
     real(dl) grhormass(max_nu)
 
@@ -258,15 +260,24 @@
     subroutine CAMBParams_Set(P, error, DoReion)
     use constants
     type(CAMBparams), intent(in) :: P
-    real(dl) GetOmegak, fractional_number, conv
+!---CDE Start
+    !real(dl) GetOmegak, fractional_number, conv    
+    real(dl) fractional_number, conv
+!---CDE End
     integer, optional :: error !Zero if OK
     logical, optional :: DoReion
     logical WantReion
     integer nu_i,actual_massless
     real(dl) nu_massless_degeneracy, neff_i
-    external GetOmegak
+!---CDE Start    
+    !external GetOmegak
+!---CDE End    
     real(dl), save :: last_tau0
     !Constants in SI units
+
+    ! KR
+    ! real(8) :: Dtrycamb
+    ! common /Dtrycamb/ Dtrycamb
 
     global_error_flag = 0
 
@@ -334,9 +345,11 @@
         CP%MassiveNuMethod = Nu_trunc
     end if
 
-    CP%omegak = GetOmegak()
+!---CDE Start
+    !CP%omegak = GetOmegak()
+!---CDE End
 
-    CP%flat = (abs(CP%omegak) <= OmegaKFlat)
+    CP%flat = (abs(CP%omegak) <= OmegaKFlat)				
     CP%closed = CP%omegak < -OmegaKFlat
 
     CP%open = .not.CP%flat.and..not.CP%closed
@@ -349,6 +362,9 @@
         CP%Ksign =sign(1._dl,CP%curv)
         CP%r=1._dl/sqrt(abs(CP%curv))
     end if
+
+
+
     !  grho gives the contribution to the expansion rate from: (g) photons,
     !  (r) one flavor of relativistic neutrino (2 degrees of freedom),
     !  (m) nonrelativistic matter (for Omega=1).  grho is actually
@@ -376,11 +392,16 @@
     end do
     grhoc=grhom*CP%omegac
     grhob=grhom*CP%omegab
-    grhov=grhom*CP%omegav
+
+!---CDE Start        
     grhok=grhom*CP%omegak
+	!grhov=grhom*CP%omegav    
+    CP%omegav = 1._dl - (CP%omegab + CP%omegac + CP%omegan + CP%omegak)	
+    grhov=grhom*CP%omegav
+!---CDE End    
+    
     !  adotrad gives the relation a(tau) in the radiation era:
     adotrad = sqrt((grhog+grhornomass+sum(grhormass(1:CP%Nu_mass_eigenstates)))/3)
-
 
     Nnow = CP%omegab*(1-CP%yhe)*grhom*c**2/kappa/m_H/Mpc**2
 
@@ -419,6 +440,10 @@
         return
     end if
 
+    ! KR
+    ! Dtrycamb = CosmomcTheta()
+    ! write(*,*) "Dtrycamb = ", Dtrycamb
+
     if (present(error)) then
         error = 0
     else if (FeedbackLevel > 0 .and. .not. call_again) then
@@ -433,7 +458,7 @@
             write(*,'("N_eff (total)        = ",f9.6)') nu_massless_degeneracy + &
                 sum(CP%Nu_mass_degeneracies(1:CP%Nu_mass_eigenstates))
             do nu_i=1, CP%Nu_mass_eigenstates
-                conv = k_B*(8*grhor/grhog/7)**0.25*CP%tcmb/eV * &
+                conv = k_B*(8*grhor/grhog/7)**0.25*CP%tcmb/e_V * &
                     (CP%nu_mass_degeneracies(nu_i)/CP%nu_mass_numbers(nu_i))**0.25 !approx 1.68e-4
                 write(*,'(I2, " nu, g=",f7.4," m_nu*c^2/k_B/T_nu0= ",f9.2," (m_nu= ",f6.3," eV)")') &
                     CP%nu_mass_numbers(nu_i), CP%nu_mass_degeneracies(nu_i), nu_masses(nu_i),conv*nu_masses(nu_i)
@@ -529,6 +554,12 @@
     else
         atol = tol/1000/exp(AccuracyBoost-1)
     end if
+
+    ! KR
+    ! Important: Here, dtauda is called for the first time.
+    ! Here the background is computed incorrectly.
+    ! write(*,*) "DeltaTime"
+
     DeltaTime=rombint(dtauda,a1,a2,atol)
 
     end function DeltaTime
@@ -537,6 +568,10 @@
     implicit none
     real(dl) TimeOfz
     real(dl), intent(IN) :: z
+
+    ! KR
+    ! Here, DeltaTime is called for the first time.
+    ! write(*,*) "TimeOfz - DeltaTime"
 
     TimeOfz=DeltaTime(0._dl,1._dl/(z+1._dl))
     end function TimeOfz
@@ -1776,12 +1811,22 @@
         ! total perturbations with and without neutrinos, with neutrinos+dark energy in the numerator
         Transfer_Weyl = 10, & ! the Weyl potential, for lensing and ISW
         Transfer_Newt_vel_cdm=11, Transfer_Newt_vel_baryon=12,   & ! -k v_Newtonian/H
-        Transfer_vel_baryon_cdm = 13 !relative velocity of baryons and CDM
+        Transfer_vel_baryon_cdm = 13, & !relative velocity of baryons and CDM
+!---CDE Start
+		Transfer_delta_phi=14, Transfer_delta_chi=15, Transfer_delta_phi_prime=16, Transfer_delta_chi_prime=17
 
-    integer, parameter :: Transfer_max = Transfer_vel_baryon_cdm
+    !integer, parameter :: Transfer_max = Transfer_vel_baryon_cdm
+    integer, parameter :: Transfer_max = Transfer_delta_chi_prime    
+    
     character(LEN=name_tag_len) :: Transfer_name_tags(Transfer_max-1) = &
+        !['CDM     ', 'baryon  ', 'photon  ', 'nu      ', 'mass_nu ', 'total   ', &
+        !'no_nu   ', 'total_de', 'Weyl    ', 'v_CDM   ', 'v_b     ', 'v_b-v_c ']
+
         ['CDM     ', 'baryon  ', 'photon  ', 'nu      ', 'mass_nu ', 'total   ', &
-        'no_nu   ', 'total_de', 'Weyl    ', 'v_CDM   ', 'v_b     ', 'v_b-v_c ']
+         'no_nu   ', 'total_de', 'Weyl    ', 'v_CDM   ', 'v_b     ', 'v_b-v_c ', &
+         'del_phi ', 'del_chi ', 'del_phip', 'del_chip']
+
+!---CDE End
 
     logical :: transfer_interp_matterpower  = .true. !output regular grid in log k
     !set to false to output calculated values for later interpolation
@@ -2468,7 +2513,8 @@
     do i_PK=1, CP%Transfer%PK_num_redshifts
         if (FileNames(i_PK) /= '') then
             i = CP%Transfer%PK_redshifts_index(i_PK)
-            unit = open_file_header(FileNames(i_PK), 'k/h', transfer_name_tags, 14)
+            !unit = open_file_header(FileNames(i_PK), 'k/h', transfer_name_tags, 14)
+            unit = open_file_header(FileNames(i_PK), 'k/h', transfer_name_tags, 18)            
             do ik=1,MTrans%num_q_trans
                 if (MTrans%TransferData(Transfer_kh,ik,i)/=0) then
                     write(unit,'(*(E15.6))') MTrans%TransferData(Transfer_kh:Transfer_max,ik,i)
@@ -2706,8 +2752,13 @@
     integer noutput
     external rombint
 
-    call Recombination_Init(CP%Recomb, CP%omegac, CP%omegab,CP%Omegan, CP%Omegav, &
-        CP%h0,CP%tcmb,CP%yhe,CP%Num_Nu_massless + CP%Num_Nu_massive)
+!---CDE Start
+    !call Recombination_Init(CP%Recomb, CP%omegac, CP%omegab,CP%Omegan, CP%Omegav, &
+    !    CP%h0,CP%tcmb,CP%yhe,CP%Num_Nu_massless + CP%Num_Nu_massive)
+    call Recombination_Init(CP%Recomb, CP%omegac, CP%omegab,CP%Omegan, CP%Omegak, &
+        CP%h0,CP%tcmb,CP%yhe,CP%Num_Nu_massless + CP%Num_Nu_massive)        
+!---CDE End
+
     !almost all the time spent here
     if (global_error_flag/=0) return
     Maxtau=taumax
@@ -2940,7 +2991,14 @@
         ThermoDerivedParams( derived_Age ) = DeltaPhysicalTimeGyr(0.0_dl,1.0_dl)
         ThermoDerivedParams( derived_zstar ) = z_star
         ThermoDerivedParams( derived_rstar ) = rs
+        ! Important
         ThermoDerivedParams( derived_thetastar ) = 100*rs/DA
+
+        ! KR
+         !open(unit=11,file='thetastar.txt')
+         !write(11,*) ThermoDerivedParams( derived_thetastar )
+         !close(11)
+
         ThermoDerivedParams( derived_DAstar ) = DA/1000
         ThermoDerivedParams( derived_zdrag ) = z_drag
         rs =rombint(dsound_da_exact,1d-8,1/(z_drag+1),1d-6)
