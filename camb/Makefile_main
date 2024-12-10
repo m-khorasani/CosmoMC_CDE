@@ -1,6 +1,6 @@
 
 #Files containing evolution equations initial power spectrum module
-EQUATIONS     ?= equations
+EQUATIONS     ?= equations_ppf_CDE
 POWERSPECTRUM ?= power_tilt
 REIONIZATION ?= reionization
 RECOMBINATION ?= recfast
