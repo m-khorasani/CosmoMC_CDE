@@ -9,7 +9,10 @@
         initial_adiabatic,initial_vector,initial_iso_baryon,initial_iso_CDM, initial_iso_neutrino, initial_iso_neutrino_vel, &
         HighAccuracyDefault, highL_unlensed_cl_template, ThermoDerivedParams, nthermo_derived, BackgroundOutputs, &
         Transfer_SortAndIndexRedshifts,  &
-        Recombination_Name, reionization_name, power_name, threadnum, version, tensor_param_rpivot
+        Recombination_Name, reionization_name, power_name, threadnum, version, tensor_param_rpivot, &
+!---CDE Start    
+        log_phi_i, chi_i, log_lambda_chi
+!---CDE End    
     use Errors !CAMB
     use settings
     use likelihood
@@ -91,8 +94,16 @@
     P%omegab = CMB%omb
     P%omegan = CMB%omnu
     P%omegac = CMB%omc
-    P%omegav = CMB%omv
+!---CDE Start    
+    !P%omegav = CMB%omv
+    P%omegak = CMB%omk    
     P%H0 = CMB%H0
+
+    log_phi_i = CMB%log_phi_i
+    chi_i = CMB%chi_i
+    log_lambda_chi = CMB%log_lambda_chi
+!---CDE End
+
     P%Reion%redshift= CMB%zre
     P%Reion%delta_redshift = CMB%zre_delta
     w_lam = CMB%w
@@ -233,7 +244,9 @@
                 if (CosmoSettings%cl_lmax(i,i)>0) then
                     if (any(Theory%cls(i,i)%Cl(:) < 0 )) then
                         error = 1
-                        call MpiStop('Calculator_CAMB: negative C_l (could edit to silent error here)')
+!---CDE Start                       
+                        !call MpiStop('Calculator_CAMB: negative C_l (could edit to silent error here)')
+!---CDE End
                         return
                     end if
                 end if
@@ -311,7 +324,9 @@
         call this%SetPowersFromCAMB(CMB,Theory)
         if (any(Theory%cls(1,1)%Cl(:) < 0 )) then
             error = 1
-            call MpiStop('Calculator_CAMB: negative C_l (could edit to silent error here)')
+!---CDE Start 
+            !call MpiStop('Calculator_CAMB: negative C_l (could edit to silent error here)')
+!---CDE Start 
         end if
         do i=1, min(3,CosmoSettings%num_cls)
             if(error/=0) exit
@@ -691,7 +706,7 @@
     integer, intent(in) :: n
     real(mcp), intent(IN) :: z(n)
     real(mcp), intent(out) :: arr(n)
-    !Note redshifts must be monotonically increasing    
+    !Note redshifts must be monotonically increasing
 
     call ComovingRadialDistanceArr(arr, z, n, 1d-4)
 

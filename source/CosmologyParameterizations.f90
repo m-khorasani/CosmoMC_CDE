@@ -17,7 +17,7 @@
     private
 
     Type, extends(TCosmologyParameterization) :: ThetaParameterization
-        real(mcp) :: H0_min = 40, H0_max = 100
+        real(mcp) :: H0_min = 60, H0_max = 80
         real(mcp) :: H0_prior_mean = 0._mcp, H0_prior_std = 0._mcp
         real(mcp) :: sterile_mphys_max = 10 !maximum allowed physical mass of thermal sterile neutrino in eV
         real(mcp) :: use_min_zre = 0._mcp
@@ -83,8 +83,10 @@
     call Names%AddDerivedRange('H0', this%H0_min, this%H0_max)
     this%num_derived = Names%num_derived
     !set number of hard parameters, number of initial power spectrum parameters
-    call this%SetTheoryParameterNumbers(16,last_power_index)
-
+!---CDE Start    
+    !call this%SetTheoryParameterNumbers(16,last_power_index)
+    call this%SetTheoryParameterNumbers(19,last_power_index)
+!---CDE End
     end subroutine TP_Init
 
     function TP_NonBaseParameterPriors(this,CMB)
@@ -124,6 +126,13 @@
     Type(CMBParams), pointer :: CP2
     integer error
 
+!---CDE Start   
+    real(16) :: lambdaphit
+    common /lambdaphit/ lambdaphit
+    
+    real(16) :: omegam_bao
+	common /omegam_bao/ omegam_bao    
+!---CDE End   
     select type(CosmoCalc=>this%Config%Calculator)
     class is (TCosmologyCalculator)
         select type (CMB)
@@ -144,6 +153,7 @@
             DA = Params(3)/100
             try_b = this%H0_min
             call SetForH(Params,CMB,try_b, .true.,error)  !JD for bbn related errors
+
             if(error/=0)then
                 cmb%H0=0
                 return
@@ -157,19 +167,21 @@
                 cmb%H0=0 !Reject it
             else
                 lasttry = -1
+
                 do
                     call SetForH(Params,CMB,(try_b+try_t)/2, .false.)
                     D_try = CosmoCalc%CMBToTheta(CMB)
+
                     if (D_try < DA) then
                         try_b = (try_b+try_t)/2
                     else
                         try_t = (try_b+try_t)/2
                     end if
-                    if (abs(D_try - lasttry)< 1e-7) exit
+                    if (abs(D_try - lasttry) < 1e-7) exit
                     lasttry = D_try
                 end do
 
-                !!call InitCAMB(CMB,error)
+				!call InitCAMB(CMB,error)
                 if (CMB%tau==0._mcp) then
                     CMB%zre=0
                 else
@@ -197,12 +209,20 @@
     real(mcp) z
     integer, parameter :: derivedCL(5) = [40, 220, 810, 1420, 2000]
 
+!---CDE Start   
+    real(16) :: lambdaphit
+    common /lambdaphit/ lambdaphit
+
+    real(16) :: omegam_bao
+	common/omegam_bao/ omegam_bao
+!---CDE End
     if (.not. allocated(Theory)) call MpiStop('Not allocated theory!!!')
     select type (Theory)
     class is (TCosmoTheoryPredictions)
         allocate(Derived(this%num_derived), source=0._mcp)
 
         call this%ParamArrayToTheoryParams(P,CMB)
+
 
         derived(1) = CMB%H0
         derived(2) = CMB%omv
@@ -219,7 +239,12 @@
         derived(12) = Theory%derived_parameters( derived_rdrag )*CMB%H0/100
         derived(13) = Theory%Lensing_rms_deflect
         derived(14) = CMB%zre
-        ix=15
+!---CDE Start   
+        derived(15) = log10(lambdaphit)
+        derived(16) = omegam_bao
+        ! ix=15
+        ix=17
+!---CDE End        
         derived(ix) = cl_norm*CMB%InitPower(As_index)*1e9
         derived(ix+1) = derived(ix)*exp(-2*CMB%tau)  !A e^{-2 tau}
         ix = ix+2
@@ -294,7 +319,7 @@
         CMB%reserved = 0
         CMB%ombh2 = Params(1)
         CMB%tau = params(4) !tau, set zre later
-        CMB%Omk = Params(5)
+        CMB%omk = Params(5)
         CMB%w = Params(8)
         CMB%wa = Params(9)
         CMB%nnu = Params(10) !3.046
@@ -334,6 +359,12 @@
         CMB%ALens = Params(14)
         CMB%ALensf = Params(15)
         CMB%fdm = Params(16)
+!---CDE Start
+        CMB%log_phi_i = Params(17)
+        CMB%chi_i = Params(18)
+        CMB%log_lambda_chi = Params(19)
+!---CDE End
+
         call SetFast(Params,CMB)
     end if
 
@@ -375,7 +406,11 @@
         CMB%w =    Params(5)
         CMB%wa =    Params(6)
         CMB%nnu =    Params(7)
-
+!---CDE Start
+        CMB%log_phi_i = Params(8)
+        CMB%chi_i = Params(9)
+        CMB%log_lambda_chi = Params(10)
+!---CDE End
         CMB%h=CMB%H0/100
         h2 = CMB%h**2
         CMB%Yhe=0.24
@@ -477,6 +512,11 @@
         else
             CMB%YHe = Params(9)
         end if
+!---CDE Start
+        CMB%log_phi_i = Params(10)
+        CMB%chi_i = Params(11)
+        CMB%log_lambda_chi = Params(12)
+!---CDE End
 
         CMB%InitPower(1:num_initpower) = Params(index_initpower:index_initpower+num_initpower-1)
         !CMB%InitPower(As_index) = exp(CMB%InitPower(As_index))

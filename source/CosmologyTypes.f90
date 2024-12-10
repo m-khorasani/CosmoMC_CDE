@@ -119,6 +119,11 @@
         real(mcp) :: omnuh2_sterile = 0._mcp  !note omnhu2 is the sum of this + standard neutrinos
         real(mcp) :: sum_mnu_standard
         real(mcp) reserved(5)
+!---CDE Start
+        real(mcp) log_phi_i
+        real(mcp) chi_i
+        real(mcp) log_lambda_chi
+!---CDE End
     end Type CMBParams
 
     Type, extends(TParameterization) :: TCosmologyParameterization
