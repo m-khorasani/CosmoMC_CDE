@@ -1,5 +1,5 @@
 ===================
-CosmoMC
+CosmoMC_CDE
 ===================
 :CosmoMC:  Fortran 2008 parallelized MCMC sampler (general and cosmology)
 :Homepage: http://cosmologist.info/cosmomc/
