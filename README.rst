@@ -4,22 +4,22 @@ CosmoMC_CDE
 :CosmoMC:  Fortran 2008 parallelized MCMC sampler (general and cosmology)
 :Homepage: http://cosmologist.info/cosmomc/
 
-Description and installation
+
+Description
 =============================
 
-For full details see the `ReadMe <http://cosmologist.info/cosmomc/readme.html>`_.
-This branch has the code used for the Planck 2018 parameter analysis.
+CosmoMC_CDE is a fork of `CosmoMC Planck 2018 <https://github.com/cmbant/CosmoMC/tree/planck2018>`_. It utilizes an eighth-order Runge-Kutta algorithm to evaluate the Friedmann equation and incorporates the perturbed Klein-Gordon equation for the `Cascading Dark Energy <https://arxiv.org/pdf/2208.07631>`_ (CDE) model. Furthermore, DESI BAO and Pantheon+ datasets are incorporated.  
 
-Algorithm details
-==================
 
-See the latest `paper <http://arxiv.org/abs/1304.4473>`_.
+Chabges
+=============================
 
-GetDist
-===================
+You can see the changes in the block
 
-CosmoMC includes the GetDist python sample analysis and plotting package, which is
-also `available separately <http://getdist.readthedocs.org/en/latest/>`_.
+!---CDE Start
+
+!---CDE End
+
 
 Branches
 =============================
