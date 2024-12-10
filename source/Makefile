@@ -12,6 +12,11 @@ ifeq "$(ifortErr)" "0"
 #ifort; Can remove -xHost if your cluster is not uniform, or specify specific processor optimizations -x...
 
 F90C     = ifort
+
+mpierr= $(shell which mpiifort >/dev/null 2>&1; echo $$?)
+ifeq "$(mpierr)" "0"
+MPIF90C  ?= mpiifort -fc=ifort
+endif
 #Can use this if mpif90 not picking up ifort:
 #MPIF90C ?= mpif90 -f90=ifort
 
@@ -181,6 +186,7 @@ COSMOFILES = $(OUTPUT_DIR)/CosmologyTypes.o $(OUTPUT_DIR)/CosmoTheory.o $(OUTPUT
 	$(OUTPUT_DIR)/CalcLike_Cosmology.o $(OUTPUT_DIR)/Likelihood_Cosmology.o $(CALCFILES) $(DATAMODULES) $(PARAMETERIZATION) $(LIKEFILES) \
 	$(OUTPUT_DIR)/CosmologyConfig.o
 
+
 OBJFILES += $(COSMOFILES) $(OUTPUT_DIR)/driver.o
 
 F90CRLINK =
@@ -230,6 +236,7 @@ $(OUTPUT_DIR)/MCMC.o: $(OUTPUT_DIR)/calclike.o $(OUTPUT_DIR)/RandUtils.o  $(OUTP
 $(OUTPUT_DIR)/minimize.o: $(OUTPUT_DIR)/PowellConstrainedMinimize.o $(OUTPUT_DIR)/MCMC.o
 $(OUTPUT_DIR)/SampleCollector.o: $(OUTPUT_DIR)/MCMC.o
 $(OUTPUT_DIR)/GeneralSetup.o: $(OUTPUT_DIR)/SampleCollector.o $(OUTPUT_DIR)/ImportanceSampling.o  $(OUTPUT_DIR)/minimize.o
+
 
 $(OUTPUT_DIR)/driver.o: $(OUTPUT_DIR)/GeneralSetup.o $(OUTPUT_DIR)/CosmologyConfig.o
 
@@ -319,7 +326,7 @@ getdist: directories $(DISTFILES)
 camb:
 	cd ../camb && \
 	$(MAKE) --file=Makefile_main libcamb OUTPUT_DIR=$(OUTPUT_DIR) \
-	RECOMBINATION=$(RECOMBINATION) EQUATIONS=equations_ppf NONLINEAR=halofit_ppf
+	RECOMBINATION=$(RECOMBINATION) EQUATIONS=equations_ppf_CDE NONLINEAR=halofit_ppf
 
 $(highL)/libhigh.a:
 	cd $(highL); make libhigh.a;
