@@ -112,7 +112,12 @@
     IMPLICIT NONE
 
     !Modified by AL to have option of internal alpha, beta marginalization
-    logical :: JLA_marginalize = .false.
+    logical :: JLA_marginalize = .false. 
+    logical :: use_Pantheon = .false.
+    logical :: use_Pantheon_Plus = .false.
+    logical :: use_Pantheon_SH0ES = .false.
+    logical :: use_Union3 = .false.
+    logical :: use_DES_Y5 = .false.
     REAL(mcp), allocatable :: JLA_marge_grid(:), alpha_grid(:),beta_grid(:)
     integer :: JLA_marge_steps = 0
     real(mcp) JLA_step_width_alpha, JLA_step_width_beta
@@ -233,6 +238,11 @@
     this%needs_background_functions = .true.
     this%version = Ini%Read_String_Default('jla_version',JLA_version)
     JLA_marginalize = Ini%Read_Logical('JLA_marginalize',.false.)
+    use_Pantheon = Ini%Read_Logical('use_Pantheon',.false.)
+    use_Pantheon_Plus = Ini%Read_Logical('use_Pantheon_Plus',.false.)  
+    use_Pantheon_SH0ES = Ini%Read_Logical('use_Pantheon_SH0ES',.false.)
+    use_DES_Y5 = Ini%Read_Logical('use_DES_Y5',.false.)
+    use_Union3 = Ini%Read_Logical('use_Union3',.false.)
     if (JLA_marginalize) then
         JLA_marge_steps = Ini%Read_Int('JLA_marge_steps',7)
         JLA_step_width_alpha = Ini%Read_Double('JLA_step_width_alpha',0.003d0)
@@ -411,7 +421,7 @@
             sndata(count)%colour,dc,sndata(count)%thirdvar, dt,&
             sndata(count)%cov_mag_stretch,&
             sndata(count)%cov_mag_colour,sndata(count)%cov_stretch_colour,&
-            sndata(count)%dataset
+            sndata(count)%dataset    
         IF ( (count .GT. 1) .AND. (.NOT. has_thirdvar) ) THEN
             WRITE(*,*) "Problem with third variable read"
             STOP
@@ -445,7 +455,7 @@
             dz, sndata(count)%mag, dm, sndata(count)%stretch, ds, &
             sndata(count)%colour,dc,sndata(count)%cov_mag_stretch,&
             sndata(count)%cov_mag_colour,sndata(count)%cov_stretch_colour,&
-            sndata(count)%dataset
+            sndata(count)%dataset    
         IF ( (count .GT. 1) .AND. (has_thirdvar) ) THEN
             WRITE(*,*) "Problem with third variable read"
             STOP
@@ -677,39 +687,39 @@
     IF ( has_mag_covmat .OR. has_stretch_covmat .OR. has_colour_covmat .OR. &
         has_mag_stretch_covmat .OR. has_mag_colour_covmat .OR. &
         has_stretch_colour_covmat ) THEN
-    diag_errors = .FALSE.
+        diag_errors = .FALSE.
 
-    !Now Read in the covariance matricies
-    IF (has_mag_covmat) THEN
-        covfile = Ini%Read_String('mag_covmat_file',.TRUE.)
-        ALLOCATE( mag_covmat( nsn, nsn ) )
-        CALL read_cov_matrix( covfile, mag_covmat, nsn )
-    ENDIF
-    IF (has_stretch_covmat) THEN
-        covfile = Ini%Read_String('stretch_covmat_file',.TRUE.)
-        ALLOCATE( stretch_covmat( nsn, nsn ) )
-        CALL read_cov_matrix( covfile, stretch_covmat, nsn )
-    ENDIF
-    IF (has_colour_covmat) THEN
-        covfile = Ini%Read_String('colour_covmat_file',.TRUE.)
-        ALLOCATE( colour_covmat( nsn, nsn ) )
-        CALL read_cov_matrix( covfile, colour_covmat, nsn )
-    ENDIF
-    IF (has_mag_stretch_covmat) THEN
-        covfile = Ini%Read_String('mag_stretch_covmat_file',.TRUE.)
-        ALLOCATE( mag_stretch_covmat( nsn, nsn ) )
-        CALL read_cov_matrix( covfile, mag_stretch_covmat, nsn )
-    ENDIF
-    IF (has_mag_colour_covmat) THEN
-        covfile = Ini%Read_String('mag_colour_covmat_file',.TRUE.)
-        ALLOCATE( mag_colour_covmat( nsn, nsn ) )
-        CALL read_cov_matrix( covfile, mag_colour_covmat, nsn )
-    ENDIF
-    IF (has_stretch_colour_covmat) THEN
-        covfile = Ini%Read_String('stretch_colour_covmat_file',.TRUE.)
-        ALLOCATE( stretch_colour_covmat( nsn, nsn ) )
-        CALL read_cov_matrix( covfile, stretch_colour_covmat, nsn )
-    ENDIF
+        !Now Read in the covariance matricies
+        IF (has_mag_covmat) THEN
+            covfile = Ini%Read_String('mag_covmat_file',.TRUE.)
+            ALLOCATE( mag_covmat( nsn, nsn ) )
+            CALL read_cov_matrix( covfile, mag_covmat, nsn )
+        ENDIF
+        IF (has_stretch_covmat) THEN
+            covfile = Ini%Read_String('stretch_covmat_file',.TRUE.)
+            ALLOCATE( stretch_covmat( nsn, nsn ) )
+            CALL read_cov_matrix( covfile, stretch_covmat, nsn )
+        ENDIF
+        IF (has_colour_covmat) THEN
+            covfile = Ini%Read_String('colour_covmat_file',.TRUE.)
+            ALLOCATE( colour_covmat( nsn, nsn ) )
+            CALL read_cov_matrix( covfile, colour_covmat, nsn )
+        ENDIF
+        IF (has_mag_stretch_covmat) THEN
+            covfile = Ini%Read_String('mag_stretch_covmat_file',.TRUE.)
+            ALLOCATE( mag_stretch_covmat( nsn, nsn ) )
+            CALL read_cov_matrix( covfile, mag_stretch_covmat, nsn )
+        ENDIF
+        IF (has_mag_colour_covmat) THEN
+            covfile = Ini%Read_String('mag_colour_covmat_file',.TRUE.)
+            ALLOCATE( mag_colour_covmat( nsn, nsn ) )
+            CALL read_cov_matrix( covfile, mag_colour_covmat, nsn )
+        ENDIF
+        IF (has_stretch_colour_covmat) THEN
+            covfile = Ini%Read_String('stretch_colour_covmat_file',.TRUE.)
+            ALLOCATE( stretch_colour_covmat( nsn, nsn ) )
+            CALL read_cov_matrix( covfile, stretch_colour_covmat, nsn )
+        ENDIF
     ELSE
         diag_errors = .TRUE.
     END IF
@@ -797,9 +807,9 @@
             RETURN
         ELSE IF ( (ABS(alpha-alpha_prev) .LT. alphatol) .AND. &
             ( ABS(beta-beta_prev) .LT. betatol ) ) THEN
-        !Previous invcovmatrix is close enough
-        status = 0
-        RETURN
+            !Previous invcovmatrix is close enough
+            status = 0
+            RETURN
         ENDIF
     ENDIF
 
@@ -880,7 +890,6 @@
     CHARACTER(LEN=*), PARAMETER :: datafile = 'data/jla_data.dat'
     ! dz multiplicative factor
     REAL(dl), PARAMETER :: zfacsq = 25.0/(LOG(10.0))**2
-
     REAL(dl) ::  intrinsicsq(max_idisp_datasets)
     INTEGER ::  i
     LOGICAL :: has_A1, has_A2
@@ -910,15 +919,38 @@
     ! modified
     !The redshift error is irrelevant for SN with absolute distances
     ALLOCATE( pre_vars(nsn) )
-    pre_vars = sndata%mag_var + intrinsicsq(sndata%dataset+1)
+    
+!---CDE Start
+	if (use_Pantheon) then
+	    pre_vars = sndata%mag_var + intrinsicsq(sndata%dataset+1)
+
+	else if (use_Pantheon_Plus) then
+
+		if (use_DES_Y5) then 
+		    pre_vars = sndata%mag_var
+
+		else if (use_Union3) then 
+
+			pre_vars = 0.0
+			
+		else if (use_Pantheon_SH0ES) then		
+
+			pre_vars = 0.0
+
+		end if
+		
+	end if	
+	 
     DO i=1,nsn
-        IF (.NOT. sndata(i)%has_absdist) THEN
-            pre_vars(i) = pre_vars(i) + &
-                zfacsq * pecz**2 * &
-                ( (1.0 + sndata(i)%zcmb)/&
-                (sndata(i)%zcmb*(1+0.5*sndata(i)%zcmb)) )**2
-        ENDIF
+		    IF (.NOT. sndata(i)%has_absdist) THEN
+		        pre_vars(i) = pre_vars(i) + &
+		            zfacsq * pecz**2 * &
+		            ( (1.0 + sndata(i)%zcmb)/&
+		            (sndata(i)%zcmb*(1+0.5*sndata(i)%zcmb)) )**2
+		    ENDIF     
     ENDDO
+!---CDE End
+
     ALLOCATE(lumdists(nsn))
 
     IF (twoscriptmfit) THEN
@@ -960,22 +992,22 @@
         !Write out summary of SN info
         WRITE(*,*) "Summary of supernova data: "
         IF (twoscriptmfit) THEN
-            WRITE(*,snheadfmt) "Name","zhel","dz","mag","dmag", &
+            WRITE(*,snheadfmt) "Name","zhel","dz","mag", "dmag", &
                 "s","ds","c","dc","t","dt","pre_err"
             DO i = 1, nsn
                 WRITE(*,sndatfmt2) sndata(i)%name,sndata(i)%zhel,&
-                    SQRT(sndata(i)%z_var),sndata(i)%mag,SQRT(sndata(i)%mag_var),&
+                    SQRT(sndata(i)%z_var),sndata(i)%mag, SQRT(sndata(i)%mag_var),&
                     sndata(i)%stretch,SQRT(sndata(i)%stretch_var),&
                     sndata(i)%colour,SQRT(sndata(i)%colour_var),&
                     sndata(i)%thirdvar,SQRT(sndata(i)%thirdvar_var),&
                     SQRT(pre_vars(i))
             END DO
         ELSE
-            WRITE(*,snheadfmt) "Name","zhel","dz","mag","dmag", &
+            WRITE(*,snheadfmt) "Name","zhel","dz","mag", "dmag", &
                 "s","ds","c","dc","pre_err"
             DO i = 1, nsn
                 WRITE(*,sndatfmt) sndata(i)%name,sndata(i)%zhel,&
-                    SQRT(sndata(i)%z_var),sndata(i)%mag,SQRT(sndata(i)%mag_var),&
+                    SQRT(sndata(i)%z_var),sndata(i)%mag, SQRT(sndata(i)%mag_var),&
                     sndata(i)%stretch,SQRT(sndata(i)%stretch_var),&
                     sndata(i)%colour,&
                     SQRT(sndata(i)%colour_var),SQRT(pre_vars(i))
@@ -1028,22 +1060,40 @@
     FUNCTION  JLA_alpha_beta_like(alpha, beta,  lumdists)
     real(mcp) :: JLA_alpha_beta_like
     CHARACTER(LEN=*), PARAMETER :: invfmt = &
-        '("Error inverting cov matrix for ",F6.3,2X,F6.3)'
+    '("Error inverting cov matrix for ",F6.3,2X,F6.3)'
 
-    INTEGER :: i, status
-    real(dl) :: lumdists(nsn)
-    REAL(dl) :: alpha, beta
+    INTEGER :: i, j, status
+    real(mcp) :: lumdists(nsn)
+    REAL(mcp) :: alpha, beta
     !We form an estimate for scriptm to improve numerical
-    ! accuracy in our marginaliztion
-    REAL(dl) :: estimated_scriptm, wtval
-    REAL(dl) :: chisq !Utility variables
-    REAL(dl) :: alphasq, betasq, alphabeta !More utility variables
-    REAL(dl) :: amarg_A, amarg_B, amarg_C
-    REAL(dl) :: amarg_D, amarg_E, amarg_F, tempG !Marginalization params
-    real(dl) :: diffmag(nsn),invvars(nsn)
-    real(dl), allocatable :: invcovmat(:,:)
+    !accuracy in our marginaliztion
+    REAL(mcp) :: estimated_scriptm, wtval
+    REAL(mcp) :: chisq, chisq_pantheon, chisq_extra !Utility variables
+    REAL(mcp) :: alphasq, betasq, alphabeta !More utility variables
+    REAL(mcp) :: amarg_A, amarg_B, amarg_C
+    REAL(mcp) :: amarg_D, amarg_E, amarg_F, tempG !Marginalization params
+    real(mcp) :: diffmag(nsn),invvars(nsn)
+!---CDE Start
+	real(mcp), allocatable :: fisher
+	real(mcp), allocatable :: diffmag_extra(:)
+	real(mcp), allocatable :: deriv_sn(:)
+	real(mcp), allocatable :: derivp_sn(:)
+	real(mcp), allocatable :: new_diff_mag(:)					
+!---CDE End    
+    real(mcp), allocatable :: invcovmat(:,:)
 
     allocate(invcovmat(nsn,nsn))
+
+!---CDE Start    
+    allocate(diffmag_extra(nsn))
+    allocate(deriv_sn(nsn))
+    allocate(derivp_sn(nsn))
+    allocate(new_diff_mag(nsn))
+!---CDE End
+
+    !    IF (.NOT. diag_errors) THEN
+    !        ALLOCATE( invcovmat(nsn,nsn) )
+    !    END IF
 
     alphasq   = alpha*alpha
     betasq    = beta*beta
@@ -1053,98 +1103,156 @@
     ! numerical precision of the results.  We'll do this ignoring
     ! the covariance matrix and ignoring if there are two scriptms
     ! to deal with
-    invvars = 1.0 / ( pre_vars + alphasq * sndata%stretch_var &
-        + betasq * sndata%colour_var &
-        + 2.0 * alpha * sndata%cov_mag_stretch &
-        - 2.0 * beta * sndata%cov_mag_colour &
-        - 2.0 * alphabeta * sndata%cov_stretch_colour )
 
-    wtval = SUM( invvars )
-    estimated_scriptm= SUM( (sndata%mag - lumdists)*invvars ) / wtval
-    diffmag = sndata%mag - lumdists + alpha*( sndata%stretch ) &
-        - beta * sndata%colour - estimated_scriptm
+!---CDE Start    
+	if (use_pantheon) then 
+!---CDE End	
+		invvars = 1.0 / ( pre_vars + 0.0*alphasq * sndata%stretch_var &
+		+ betasq * sndata%colour_var &
+		+ 2.0 * alpha * sndata%cov_mag_stretch &
+		- 2.0 * beta * sndata%cov_mag_colour &
+		- 2.0 * alphabeta * sndata%cov_stretch_colour )
 
-    IF ( diag_errors ) THEN
-        amarg_A = SUM( invvars * diffmag**2 )
-        IF ( twoscriptmfit ) THEN
-            amarg_B = SUM( invvars * diffmag * A1)
-            amarg_C = SUM( invvars * diffmag * A2)
-            amarg_D = 0.0
-            amarg_E = DOT_PRODUCT( invvars, A1 )
-            amarg_F = DOT_PRODUCT( invvars, A2 )
-        ELSE
-            amarg_B = SUM( invvars * diffmag )
-            amarg_E = wtval
-        ENDIF
-    ELSE
-        !Unfortunately, we actually need the covariance matrix,
-        ! and can't get away with evaluating terms this
-        ! V^-1 * x = y by solving V * y = x.  This costs us in performance
-        ! and accuracy, but such is life
-        CALL invert_covariance_matrix(invcovmat, alpha,beta,status)
-        IF (status .NE. 0) THEN
-            WRITE (*,invfmt) alpha,beta
-            JLA_alpha_beta_like = logZero
-            !            IF (.NOT. diag_errors) THEN
-            !                DEALLOCATE( invcovmat)
-            ! END IF
-            RETURN
-        ENDIF
+		wtval = SUM( invvars )
+		estimated_scriptm= SUM( (sndata%mag - lumdists)*invvars ) / wtval
 
-        !Now find the amarg_ parameters
-        !We re-use the invvars variable to hold the intermediate product
-        !which is sort of naughty
-        ! invvars = V^-1 * diffmag (invvars = 1.0*invcovmat*diffmag+0*invvars)
-        CALL DSYMV(uplo,nsn,1.0d0,invcovmat,nsn,diffmag,1,0.0d0,invvars,1)
+		diffmag = sndata%mag - lumdists + alpha*( sndata%stretch - 1.0 ) - beta * sndata%colour - estimated_scriptm
 
-        amarg_A = DOT_PRODUCT( diffmag, invvars ) ! diffmag*V^-1*diffmag
+		IF ( diag_errors ) THEN
+		    amarg_A = SUM( invvars * diffmag**2 )
+		    IF ( twoscriptmfit ) THEN
+		        amarg_B = SUM( invvars * diffmag * A1)
+		        amarg_C = SUM( invvars * diffmag * A2)
+		        amarg_D = 0.0
+		        amarg_E = DOT_PRODUCT( invvars, A1 )
+		        amarg_F = DOT_PRODUCT( invvars, A2 )
+		    ELSE
+		        amarg_B = SUM( invvars * diffmag )
+		        amarg_E = wtval
+		    ENDIF
+		ELSE
+		    !Unfortunately, we actually need the covariance matrix,
+		    ! and can't get away with evaluating terms this
+		    ! V^-1 * x = y by solving V * y = x.  This costs us in performance
+		    ! and accuracy, but such is life
+		    CALL invert_covariance_matrix(invcovmat, alpha,beta,status)
+		    IF (status .NE. 0) THEN
+		        WRITE (*,invfmt) alpha,beta
+		        JLA_alpha_beta_like = logZero
+		        !            IF (.NOT. diag_errors) THEN
+		        !                DEALLOCATE( invcovmat)
+		        ! END IF
+		        RETURN
+		    ENDIF
 
-        IF (twoscriptmfit) THEN
-            amarg_B = DOT_PRODUCT( invvars, A1 ) !diffmag*V^-1*A1
-            amarg_C = DOT_PRODUCT( invvars, A2 ) !diffmag*V^-1*A2
+		    !Now find the amarg_ parameters
+		    !We re-use the invvars variable to hold the intermediate product
+		    !which is sort of naughty
+		    ! invvars = V^-1 * diffmag (invvars = 1.0*invcovmat*diffmag+0*invvars)
+		    CALL DSYMV(uplo,nsn,1.0d0,invcovmat,nsn,diffmag,1,0.0d0,invvars,1)
 
-            !Be naughty again and stick V^-1 * A1 in invvars
-            CALL DSYMV(uplo,nsn,1.0d0,invcovmat,nsn,A1,1,0.0d0,invvars,1)
-            amarg_D = DOT_PRODUCT( invvars, A2 ) !A2*V^-1*A1
-            amarg_E = DOT_PRODUCT( invvars, A1 ) !A1*V^-1*A1
-            ! now V^-1 * A2
-            CALL DSYMV(uplo,nsn,1.0d0,invcovmat,nsn,A2,1,0.0d0,invvars,1)
-            amarg_F = DOT_PRODUCT( invvars, A2 ) !A2*V^-1*A2
-        ELSE
-            amarg_B = SUM( invvars ) !GB = 1 * V^-1 * diffmag
-            !amarg_E requires a little care since only half of the
-            !matrix is correct if we used the full covariance matrix
-            ! (which half depends on UPLO)
-            !GE = 1 * V^-1 * 1
-            amarg_C = 0.0_dl
-            amarg_D = 0.0_dl
-            amarg_E = 0.0_dl
-            amarg_F = 0.0_dl
-            IF ( uplo .EQ. 'U' ) THEN
-                DO I=1,nsn
-                    amarg_E = amarg_E + invcovmat(I,I) + 2.0_dl*SUM( invcovmat( 1:I-1, I ) )
-                END DO
-            ELSE
-                DO I=1,nsn
-                    amarg_E = amarg_E + invcovmat(I,I) + 2.0_dl*SUM( invcovmat( I+1:nsn, I ) )
-                END DO
-            END IF
-        ENDIF
-    END IF
+		    amarg_A = DOT_PRODUCT( diffmag, invvars ) ! diffmag*V^-1*diffmag
 
-    IF (twoscriptmfit) THEN
-        !Messy case
-        tempG = amarg_F - amarg_D*amarg_D/amarg_E;
-        IF (tempG .LE. 0.0) THEN
-            WRITE(*,*) "Twoscriptm assumption violation"
-            STOP
-        ENDIF
-        chisq = amarg_A + LOG( amarg_E*inv_twopi ) + &
-            LOG( tempG * inv_twopi ) - amarg_C*amarg_C/tempG - &
-            amarg_B*amarg_B*amarg_F / ( amarg_E*tempG ) + 2.0*amarg_B*amarg_C*amarg_D/(amarg_E*tempG )
-    ELSE
-        chisq = amarg_A + LOG( amarg_E*inv_twoPI ) - amarg_B**2/amarg_E
-    ENDIF
+		    IF (twoscriptmfit) THEN
+		        amarg_B = DOT_PRODUCT( invvars, A1 ) !diffmag*V^-1*A1
+		        amarg_C = DOT_PRODUCT( invvars, A2 ) !diffmag*V^-1*A2
+
+		        !Be naughty again and stick V^-1 * A1 in invvars
+		        CALL DSYMV(uplo,nsn,1.0d0,invcovmat,nsn,A1,1,0.0d0,invvars,1)
+		        amarg_D = DOT_PRODUCT( invvars, A2 ) !A2*V^-1*A2	!---maybe typo : A2*V^-1*A1
+		        amarg_E = DOT_PRODUCT( invvars, A1 ) !A1*V^-1*A1
+		        ! now V^-1 * A2
+		        CALL DSYMV(uplo,nsn,1.0d0,invcovmat,nsn,A2,1,0.0d0,invvars,1)
+		        amarg_F = DOT_PRODUCT( invvars, A2 ) !A2*V^-1*A2
+		    ELSE
+		        amarg_B = SUM( invvars ) !GB = 1 * V^-1 * diffmag
+		        !amarg_E requires a little care since only half of the
+		        !matrix is correct if we used the full covariance matrix
+		        !(which half depends on UPLO)
+		        !GE = 1 * V^-1 * 1
+		        amarg_C = 0.0_mcp
+		        amarg_D = 0.0_mcp
+		        amarg_E = 0.0_mcp
+		        amarg_F = 0.0_mcp
+		        
+		        IF ( uplo .EQ. 'U' ) THEN
+		            DO I=1,nsn
+		                amarg_E = amarg_E + invcovmat(I,I) + 2.0_mcp*SUM(invcovmat(1:I-1,I))
+		            END DO
+		        ELSE
+		            DO I=1,nsn
+		                amarg_E = amarg_E + invcovmat(I,I) + 2.0_mcp*SUM(invcovmat(I+1:nsn,I))
+		            END DO
+		        END IF
+
+		    ENDIF
+
+		END IF
+
+		IF (twoscriptmfit) THEN
+		    !Messy case
+		    tempG = amarg_F - amarg_D*amarg_D/amarg_E;
+		    IF (tempG .LE. 0.0) THEN
+		        WRITE(*,*) "Twoscriptm assumption violation"
+		        STOP
+		    ENDIF
+		    chisq = amarg_A + LOG( amarg_E*inv_twopi ) + &
+		    LOG( tempG * inv_twopi ) - amarg_C*amarg_C/tempG - &
+		    amarg_B*amarg_B*amarg_F / ( amarg_E*tempG ) + 2.0*amarg_B*amarg_C*amarg_D/(amarg_E*tempG )
+		ELSE
+					
+		    	chisq = amarg_A + LOG( amarg_E*inv_twoPI ) - amarg_B**2/amarg_E
+
+		ENDIF
+!---CDE Start
+	else if (use_Pantheon_Plus) then
+
+		do i=1,nsn		
+
+			if (use_Pantheon_SH0ES) then
+			
+				if ((sndata(i)%zcmb .le. 0.01000d0) .and. (sndata(i)%thirdvar==0)) then 
+			
+					deriv_sn(i) = 0 
+			
+				else 
+			
+					deriv_sn(i) = 1.d0	
+		
+				end if 
+
+			else 
+			
+				deriv_sn(i) = 1.d0
+			
+			end if
+		
+		end do
+		
+		diffmag_extra = sndata%mag - lumdists
+		
+		call invert_covariance_matrix(invcovmat, alpha, beta, status)
+
+		!derivp_sn = 1.0*invcovmat*deriv_sn + 0*derivp_sn
+		call DSYMV(uplo,nsn,1.d0,invcovmat,nsn,deriv_sn,1, 0.d0,derivp_sn,1)
+
+		fisher = dot_product(deriv_sn,derivp_sn)
+			
+		call DSYRK(uplo, 'N', nsn, 1, -1.d0/fisher, derivp_sn, nsn, 1.d0, invcovmat, nsn)
+	
+		call DSYMV(uplo, nsn, 1.d0, invcovmat, nsn, diffmag_extra, 1, 0.d0, new_diff_mag, 1)
+		
+		chisq = dot_product(diffmag_extra, new_diff_mag)
+
+		deallocate(diffmag_extra)
+		deallocate(deriv_sn)
+		deallocate(derivp_sn)			
+		deallocate(new_diff_mag)	
+		      
+	end if			
+
+!---CDE End    
+
     JLA_alpha_beta_like = chisq / 2  !Negative log likelihood
 
     IF (Feedback > 1 .and. .not. JLA_marginalize) THEN
@@ -1174,7 +1282,7 @@
     real(mcp) DataParams(:)
     ! norm_alpha, norm_beta are the positions of alpha/beta in norm
     REAL(mcp) :: jla_LnLike
-    real(dl) grid_best, zhel, zcmb, alpha, beta
+    real(dl) grid_best, zhel, zcmb, alpha, beta, ceph_dist, is_calibrator, Mu_SH0ES
     integer grid_i, i
 
     jla_LnLike = logZero
@@ -1193,15 +1301,41 @@
     ! D(zcmb)/(1+zcmb) we want (1+zhel)*D(zcmb)
     !These come out in Mpc
     DO i=1,nsn
-        zhel = sndata(i)%zhel
+    	zhel = sndata(i)%zhel
         zcmb = sndata(i)%zcmb
-        lumdists(i) = 5.0* LOG10( (1.0+zhel)*(1.0+zcmb) * this%Calculator%AngularDiameterDistance(zcmb) )
+!---CDE Start
+        is_calibrator = sndata(i)%thirdvar
+        ceph_dist = sndata(i)%colour
+
+    	if (use_Pantheon_SH0ES) then    	
+
+        	if (is_calibrator==1) then 
+
+        		lumdists(i) = ceph_dist - 25.d0
+
+        	else if ((zcmb .le. 0.01000d0) .and. (is_calibrator==0)) then  	
+
+        		lumdists(i) = sndata(i)%mag	
+
+    		else 
+
+    			lumdists(i) = 5.0*LOG10((1.0+zhel)*(1.0+zcmb)*this%Calculator%AngularDiameterDistance(zcmb))
+
+    		end if
+    		
+    	else 
+
+    		lumdists(i) = 5.0*LOG10((1.0+zhel)*(1.0+zcmb)*this%Calculator%AngularDiameterDistance(zcmb))
+
+    	end if
+!---CDE End    	
+
     ENDDO
 
     !Handle SN with absolute distances
     IF ( has_absdist ) THEN
         DO i=1,nabsdist
-            lumdists( snabsdist(i)%index ) = 5.0*LOG10( snabsdist(i)%dl )
+            lumdists( snabsdist(i)%index ) = 5.0*LOG10(snabsdist(i)%dl)
         ENDDO
     ENDIF
     if (JLA_marginalize) then
