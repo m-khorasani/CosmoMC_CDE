@@ -70,7 +70,7 @@
     if(.not. use_tabulated_w)then
         w_lam = Ini_Read_Double_File(Ini,'w', -1.d0)
         wa_ppf = Ini_Read_Double_File(Ini,'wa', 0.d0)
-        !if (Feedback > 0) write(*,'("(w0, wa) = (", f8.5,", ", f8.5, ")")') w_lam,wa_ppf
+        if (Feedback > 0) write(*,'("(w0, wa) = (", f8.5,", ", f8.5, ")")') w_lam,wa_ppf
     else
         wafile = Ini_Read_String_File(Ini,'wafile')
         open(unit=10,file=wafile,status='old')
