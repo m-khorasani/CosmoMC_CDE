@@ -41,7 +41,7 @@ Authors list
 =============================
 Main Developer:
 
-- Mohsen Khorasani, Email : _`<khorasani@ipm.ir>`_
+- Mohsen Khorasani, Email : `<khorasani[at]ipm.ir>`_
 
 Original Code Developers:
 
