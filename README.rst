@@ -28,9 +28,10 @@ Main developer:
 Mohsen Khorasani, Email : `<khorasani@ipm.ir>`_ 
 
 Original Code Developers:
+
 `<Kazem Rezazadeh>`_
 
-`<Daniel Grin>'_
+`<Daniel Grin>`_
 
 `<Amjad Ashoorioon>`_
 
