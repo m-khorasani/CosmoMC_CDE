@@ -29,11 +29,11 @@ Mohsen Khorasani, Email : `<khorasani@ipm.ir>`_
 
 Original Code Developers:
 
-`<Kazem>` `< Rezazadeh>`_
+`<Kazem Rezazadeh>`_
 
-`<Daniel>` `<Grin>`_
+`<Daniel Grin>`_
 
-`<Amjad>` `<Ashoorioon>`_
+`<Amjad Ashoorioon>`_
 
 Repo created and maintained by Mohsen Khorasani. If you find any bugs in the code, please contact Mohsen Khorasani at `<khorasani@ipm.ir>`_. 
 
