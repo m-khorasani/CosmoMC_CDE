@@ -8,7 +8,7 @@ CosmoMC_CDE
 Description
 =============================
 
-CosmoMC_CDE is a fork of `CosmoMC Planck 2018 <https://github.com/cmbant/CosmoMC/tree/planck2018>`_. It utilizes an eighth-order Runge-Kutta algorithm to evaluate the Friedmann equation and incorporates the perturbed Klein-Gordon equation for the `Cascading Dark Energy <https://arxiv.org/pdf/2208.07631>`_ (CDE) model. Furthermore, DESI BAO and Pantheon+ datasets are incorporated.  
+CosmoMC_CDE is a fork of `CosmoMC Planck 2018 <https://github.com/cmbant/CosmoMC/tree/planck2018>`_. It utilizes an eighth-order Runge-Kutta algorithm to evaluate the Friedmann equation and incorporates the perturbed Klein-Gordon equation for the Cascading Dark Energy (CDE) model (https://arxiv.org/pdf/2208.07631) <https://arxiv.org/pdf/2208.07631>`_. Furthermore, DESI BAO and Pantheon+ datasets are incorporated.  
 
 
 Chabges
