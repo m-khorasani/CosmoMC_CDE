@@ -21,6 +21,18 @@ You can see the changes in the block
 !---CDE End
 
 
+Authors list
+=============================
+Main developer:
+Mohsen Khorasani, Email : `<khorasani@ipm.ir>` 
+
+Original Code Developers:
+`<Kazem Rezazadeh>`
+`<Daniel Grin>'
+`<Amjad Ashoorioon>`
+
+Repo created and maintained by Mohsen Khorasani. If you find any bugs in the code, please contact Mohsen Khorasani at `<khorasani@ipm.ir>`. 
+
 Branches
 =============================
 
