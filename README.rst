@@ -30,7 +30,7 @@ as well as the original CAMB `paper <https://arxiv.org/abs/astro-ph/9911177>`_ a
 Changes
 =============================
 
-The primary changes are focused on `equation_ppf_CDE.f90<https://github.com/m-khorasani/CosmoMC_CDE/blob/planck2018/camb/equations_ppf_CDE.f90>`_ and `supernovae_JLA.f90<https://github.com/m-khorasani/CosmoMC_CDE/blob/planck2018/source/supernovae_JLA.f90>`_. The former describes the numerical solutions for the eighth-order Runge-Kutta algorithm and the perturbed Klein-Gordon equation, while the latter has been modified to update the inverse covariance matrix of supernovae to incorporate the Pantheon+ datasets into the code. You can review all changes in these two files, as well as in all other relevant files within the block.
+The primary changes are focused on `equation_ppf_CDE.f90 <https://github.com/m-khorasani/CosmoMC_CDE/blob/planck2018/camb/equations_ppf_CDE.f90>`_ and `supernovae_JLA.f90 <https://github.com/m-khorasani/CosmoMC_CDE/blob/planck2018/source/supernovae_JLA.f90>`_. The former describes the numerical solutions for the eighth-order Runge-Kutta algorithm and the perturbed Klein-Gordon equation, while the latter has been modified to update the inverse covariance matrix of supernovae to incorporate the Pantheon+ datasets into the code. You can review all changes in these two files, as well as in all other relevant files within the block.
 
 !---CDE Start
 
