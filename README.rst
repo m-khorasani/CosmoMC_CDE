@@ -29,7 +29,7 @@ Mohsen Khorasani, Email : `<khorasani@ipm.ir>`_
 
 Original Code Developers:
 
-<Kazem Rezazadeh>
+Kazem Rezazadeh
 
 Daniel Grin
 
