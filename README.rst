@@ -16,11 +16,11 @@ Citing CosmoMC_CDE
 
 If you use CosmoMC_CDE for your scientific work, please cite the following paper:
 
-- Cascading Dark Energy 
+-    Cascading Dark Energy 
 
-Kazem Rezazadeh, Amjad Ashoorioon, Daniel Grin
+     Kazem Rezazadeh, Amjad Ashoorioon, Daniel Grin
 
-`arXiv:2208.07631 [astro-ph.CO] <https://arxiv.org/pdf/2208.07631>`_
+     `arXiv:2208.07631 [astro-ph.CO] <https://arxiv.org/pdf/2208.07631>`_
 
 as well as the original CAMB `paper <https://arxiv.org/abs/astro-ph/9911177>`_ and CosmoMC `paper <https://arxiv.org/abs/astro-ph/0205436>`_.
 
@@ -41,7 +41,7 @@ Authors list
 =============================
 Main Developer:
 
-- Mohsen Khorasani, Email : `<khorasani@ipm.ir>`
+- Mohsen Khorasani, Email : `<khorasani@ipm.ir>`_
 
 Original Code Developers:
 
