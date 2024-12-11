@@ -16,7 +16,7 @@ Citing CosmoMC_CDE
 
 If you use CosmoMC_CDE for your scientific work, please cite the following paper:
 
--    Cascading Dark Energy 
+-   |* Cascading Dark Energy* 
 
      Kazem Rezazadeh, Amjad Ashoorioon, Daniel Grin
 
