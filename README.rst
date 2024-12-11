@@ -37,7 +37,7 @@ Authors list
 =============================
 Main Developer:
 
-- `Mohsen Khorasani <https://ipm.ac.ir/Visitorpage.jsp?VisitsCode=EP2400015>`_, Email : ` <khorasani@ipm.ir>`_
+- `Mohsen Khorasani <https://ipm.ac.ir/Visitorpage.jsp?VisitsCode=EP2400015>`_, Email : `<khorasani@ipm.ir>`_
 
 Original Code Developers:
 
