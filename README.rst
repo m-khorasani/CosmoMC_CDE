@@ -37,15 +37,15 @@ Authors list
 =============================
 Main Developer:
 
-- Mohsen Khorasani, Email : `<khorasani@ipm.ir>`_
+- `Mohsen Khorasani <https://ipm.ac.ir/Visitorpage.jsp?VisitsCode=EP2400015>`_, Email : `<khorasani@ipm.ir>`_
 
 Original Code Developers:
 
-- Kazem Rezazadeh
+- `Kazem Rezazadeh <https://www.ipm.ac.ir/personalinfo.jsp?PeopleCode=IP2000025>`_
 
-* Daniel Grin
+* `Daniel Grin <https://www.haverford.edu/users/dgrin>`_
 
-+ Amjad Ashoorioon
++ `Amjad Ashoorioon <https://www.ipm.ac.ir/personalinfo.jsp?PeopleCode=IP1800021>`_
 
 Repo created and maintained by Mohsen Khorasani. If you find any bugs in the code, please contact Mohsen Khorasani at `<khorasani@ipm.ir>`_. 
 
