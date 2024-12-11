@@ -25,15 +25,15 @@ Authors list
 =============================
 Main developer:
 
-Mohsen Khorasani, Email : `<khorasani@ipm.ir>`_ 
+- Mohsen Khorasani, Email : `<khorasani@ipm.ir>`_ 
 
 Original Code Developers:
 
-Kazem Rezazadeh
+- Kazem Rezazadeh
 
-Daniel Grin
+* Daniel Grin
 
-Amjad Ashoorioon
++ Amjad Ashoorioon
 
 Repo created and maintained by Mohsen Khorasani. If you find any bugs in the code, please contact Mohsen Khorasani at `<khorasani@ipm.ir>`_. 
 
