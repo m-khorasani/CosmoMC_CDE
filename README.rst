@@ -17,7 +17,7 @@ If you use CosmoMC_CDE for your scientific work, please cite the following paper
 
     | Kazem Rezazadeh, Amjad Ashoorioon, Daniel Grin
 
-    | `arXiv:2208.07631 [astro-ph.CO] <https://arxiv.org/pdf/2208.07631>`_ , `ApJ 975 137, 2024 <https://iopscience.iop.org/article/10.3847/1538-4357/ad7b16>`_
+    | `ApJ 975 137, 2024 <https://iopscience.iop.org/article/10.3847/1538-4357/ad7b16>`_
 
 as well as the original CAMB `paper <https://arxiv.org/abs/astro-ph/9911177>`_ and CosmoMC `paper <https://arxiv.org/abs/astro-ph/0205436>`_.
 
