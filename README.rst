@@ -14,7 +14,7 @@ CosmoMC_CDE is a fork of `CosmoMC Planck 2018 <https://github.com/cmbant/CosmoMC
 Citing CosmoMC_CDE
 =============================
 
-If you use MGCosmoMC for your scientific work, please cite the following papers:
+If you use CosmoMC_CDE for your scientific work, please cite the following paper:
 
 - Cascading Dark Energy 
 
