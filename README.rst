@@ -49,16 +49,6 @@ Original Code Developers:
 
 Repo created and maintained by Mohsen Khorasani. If you find any bugs in the code, please contact Mohsen Khorasani at `<khorasani@ipm.ir>`_. 
 
-Branches
-=============================
-
-The master branch contains latest changes to the main release version.
-
-.. image:: https://secure.travis-ci.org/cmbant/CosmoMC.png?branch=master
-  :target: https://secure.travis-ci.org/cmbant/CosmoMC/builds
-
-This branch has an old CAMB version as used by the Planck 2018 parameter analysis.
-
 =============
 
 .. raw:: html
