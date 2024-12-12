@@ -53,5 +53,5 @@ Repo created and maintained by Mohsen Khorasani. If you find any bugs in the cod
 
 .. raw:: html
 
-    <a href="http://www.sussex.ac.uk/astronomy/"><img src="https://cdn.cosmologist.info/antony/Sussex.png" height="170px"></a>
-    <a href="http://erc.europa.eu/"><img src="https://erc.europa.eu/sites/default/files/content/erc_banner-vertical.jpg" height="200px"></a>
+    <a href="https://physics.ipm.ac.ir/"><img src="https://cdn.cosmologist.info/antony/Sussex.png" height="170px"></a>
+    <a href="https://www.haverford.edu/physics-and-astronomy"><img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.interfolio.com%2Fclients%2Fhaverford-college%2F&psig=AOvVaw2-zlCmiR1jzPvLwj-7CG49&ust=1734077879657000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCOC43tLloYoDFQAAAAAdAAAAABAE.jpg" height="200px"></a>
