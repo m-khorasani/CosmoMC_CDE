@@ -1,5 +1,3 @@
-! equations_ppf_CDE.f90
-
     ! Equations module for dark energy with constant equation of state parameter w
     ! allowing for perturbations based on a quintessence model
     ! by Antony Lewis (http://cosmologist.info/)
@@ -45,6 +43,8 @@
     private nde,ddw_ppf,rde,ade,ddrde,amin
 
     contains
+    
+!---CDE Start
 
     subroutine TwoField_ReadParams(Ini)
     use IniFile
@@ -55,6 +55,7 @@
 	if (Feedback > 0) write(*,'("(log(phi_i), chi_i, log(lambda_chi)) = (", f8.5,", ", f8.5, ", ", f8.5, ")")') log_phi_i, chi_i, log_lambda_chi
 
     end subroutine TwoField_ReadParams
+!---CDE End
 
     subroutine DarkEnergy_ReadParams(Ini)
     use IniFile
@@ -437,6 +438,7 @@
 
 	do while (abs((lambdaphit - lambdaphitold)/lambdaphit) >= 1.0q-3)
 
+	!---Eqs 36-38 with grhok of 2208.07631
 
 	phitpinitial = (-4.0q0*lambdaphit*phitinitial**3.0q0)/ &
 	                  &  ((4.0q0*rhomtinitial)/exp(3.0q0*Neinitial) - (12.0q0*rhoktinitial)/exp(2.0q0*Neinitial) + (4.0q0*rhortinitial)/ &
@@ -731,6 +733,7 @@
 
 	lambdaphit = (12.0q0 - 2.0q0*phitp0**2 - lambdachit*chit0**4 - 2.0q0*chitp0**2 - 12.0q0*Omegam0 - 12.0q0*Omegar0 -12.0q0*Omegak0)/phit0**4
 
+	!---omegam_bao is used in bao.f90
 	omegam_bao = 1.0q0 - Omegak0 - (lambdaphit*phit0**4 + lambdachit*chit0**4 + 2.0q0*phitp0**2 + 2.0q0*chitp0**2)/12.0q0
 
 	! write(*,*) "lambdaphit = ", lambdaphit
@@ -827,6 +830,7 @@
 	real(16) :: rhomtinitial, rhortinitial, rhoktinitial
 	common /rhotinitial/ rhomtinitial, rhortinitial, rhoktinitial
 
+	!---Eq 27 with grhok of 2208.07631 
     dHt = (-3.0q0*exp(Ne)*rhomtinitial - 4.0q0*rhortinitial + 6.0q0*exp(2.0q0*Ne)*rhoktinitial - 3.0q0*exp(4.0q0*Ne)*Ht**2.0q0* &
        			& 	(phitp**2.0q0 + chitp**2.0q0))/(6.0q0*exp(4.0q0*Ne)*Ht)  
 
@@ -879,6 +883,7 @@
 	real(16) :: rhomtinitial, rhortinitial, rhoktinitial
 	common /rhotinitial/ rhomtinitial, rhortinitial, rhoktinitial
 
+	!---Eq 28 with grhok of 2208.07631
     dphitp = (-6.0q0*lambdaphit*phit**3.0q0 + &
         	     &    (phitp*(3.0q0*exp(Ne)*rhomtinitial + 4*rhortinitial - 6.0q0*exp(2.0q0*Ne)*rhoktinitial + 3.0q0*exp(4.0q0*Ne)*Ht**2.0q0* &
        	     &    (-6.0q0 + phitp**2.0q0 + chitp**2.0q0)))/exp(4.0q0*Ne))/(6.0q0*Ht**2.0q0)
@@ -906,6 +911,7 @@
 	real(16) :: rhomtinitial, rhortinitial, rhoktinitial
 	common /rhotinitial/ rhomtinitial, rhortinitial, rhoktinitial
 
+	!---Eq 29 with grhok of 2208.07631
    	dchitp = (-6.0q0*lambdachit*chit**3.0q0 + &
        	     &    (chitp*(3.0q0*exp(Ne)*rhomtinitial + 4.0q0*rhortinitial - 6.0q0*exp(2.0q0*Ne)*rhoktinitial + 3.0q0*exp(4.0q0*Ne)*Ht**2.0q0* &
        	     &    (-6.0q0 + phitp**2.0q0 + chitp**2.0q0)))/exp(4.0q0*Ne))/(6.0q0*Ht**2.0q0)
@@ -2915,11 +2921,11 @@
     vb=ay(5)
 
 !---CDE Start
-!---Two Fields perturations are added here instead of lines 3057-3088:
+!---Two Fields perturations are added here instead of lines 3063-3094:
 	!---\delta \phi
     clxphi=ay(EV%w_ix)		
 
-	!---\delta \phi' = k \delta \Psi
+	!---\delta \phi' = k \delta \Psi	
     qphi=k*ay(EV%w_ix+1)			
 
 	!---\delta \chi
