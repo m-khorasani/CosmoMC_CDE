@@ -1,4 +1,5 @@
 #https://arxiv.org/abs/2202.04077
+
 name = PANTHEONPLUSSH0ES
 
 data_file = data/Pantheon+SH0ES/Pantheon+SH0ES_modified.txt
