@@ -1,0 +1,16 @@
+#DESI BAO, Alam et al. 2024
+#https://arxiv.org/abs/2404.03002
+
+name = DESI2024BAO
+
+num_bao=12
+
+bao_measurements_file = desi_2024_gaussian_bao_ALL_GCcomb.dat
+bao_measurements_file_has_error = F
+
+#stored values are actually scaled by r_fid, so include that here
+#rs_rescale = 1/147.78 
+#rs_rescale = .6766815537e-2
+rs_rescale = 1
+
+bao_cov_file = desi_2024_gaussian_bao_ALL_GCcomb.txt 
