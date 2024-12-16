@@ -53,8 +53,8 @@ Repo created and maintained by Mohsen Khorasani. If you find any bugs in the cod
 
 .. raw:: html
 
-    <a href="https://physics.ipm.ac.ir/"><img src="https://www.ipm.ac.ir/img/logo250.png" style="height:200px" height="200px"></a>
-
+    <a href="https://physics.ipm.ac.ir/"><img src="https://www.ipm.ac.ir/img/logo250.png" style="height:25px" height="25px"></a>
+    <a href="https://www.haverford.edu/physics-and-astronomy/"><img src="https://www.bestdegreeprograms.org/wp-content/uploads/2021/10/Haverford-College-30-Great-Small-Colleges-for-STEM-Degrees-2021.png" style="height:50px" height="50px"></a>
     
 
 
